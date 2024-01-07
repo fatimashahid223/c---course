@@ -1,28 +1,46 @@
 #include<iostream>
-#include<conio.h>
 #include<string.h>
 #include<stdlib.h>
 using namespace std;
 
-struct patient
-{
+class Person {
+public:
+    string firstname;
+    string lastname;
+    int age;
+    char gender;
+    char blood;
     int ID;
-	string firstname;
-	string lastname;
-	int age;
-	char blood[5];
-	char gender;
-    patient*next;
+
+    virtual void displayInfo() {
+        cout << "\n   Name    : " << firstname << " " << lastname;
+        cout << "\n   Gender  : " << gender;
+        cout << "\n   Age     : " << age;
+    }
 };
-class linkedqueue
-{
-	patient *head,*last;
-	public:
-	linkedqueue() //constructor
-	{
-		head=NULL;
-		last=NULL;
-	}
+
+struct patient : public Person {
+    int ID;
+    char blood[5];
+    patient* next;
+
+    void displayInfo() override {
+        Person::displayInfo();
+        cout << "\n   Blood Group : " << blood;
+        cout << "\n   Mobile Number: " << ID;
+    }
+};
+
+class linkedqueue {
+    patient* head, * last;
+
+public:
+    linkedqueue() //constructor
+    {
+        head = NULL;
+        last = NULL;
+    }
+
     patient input();
     void insertatend();
     void insertatbeg();
@@ -102,8 +120,8 @@ patient linkedqueue :: input()
 	return *p;
 }
 
-void output(patient *p)
-{
+void output(Person* p) {
+    p->displayInfo();
 	cout<<"\n  \xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd";
 	cout<<"\n   Patient data:\n";
 	cout<<"\n   First Name         : "<<p->firstname;
@@ -113,6 +131,11 @@ void output(patient *p)
 	cout<<"\n   Blood Group        : "<<p->blood;
 	cout<<"\n   Mobile Number      : "<<p->ID;
 	cout<<"\n\n  \xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd";
+}
+void output(patient* p) {
+    output(static_cast<Person*>(p));  // Call the base class version
+    cout << "\n   Blood Group        : " << p->blood;
+    cout << "\n   Mobile Number      : " << p->ID << "\n";
 }
 void linkedqueue :: insertatbeg()
 {
@@ -232,23 +255,24 @@ void departmentmenu (linkedqueue * q)
 	{
 	  case 1:	q->insertatend();
 				cout << "\n   Press any key";
-	    		getch();
+	    	 cin.ignore();
+                break;
 	 			break;
 
       case 2:	q->insertatbeg();
 	    		cout << "\n   Press any key";
-	    		getch();
+	  cin.ignore();
 				break;
 
       case 3:	q->getpatientout();
 	 			cout<<"\n   Press any key";
-     			getch();
+     		   cin.ignore();
 	      		break;
 
       case 4:	system("cls");
 	 			q->listofpatients();
 	 			cout<<"\n   Press any key";
-	 			getch();
+	 		    cin.ignore();
 				break;
 	 }
     }
